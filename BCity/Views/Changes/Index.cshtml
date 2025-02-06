@@ -1,0 +1,80 @@
+﻿<!-- Views/Home/Index.cshtml -->
+@{
+    ViewData["Title"] = "Economic Indicators Chart";
+}
+<div class="container">
+    <div class="row  ">
+
+        <div class="col-12 text-center">
+
+
+            <h2>Changes for Countries</h2>
+            <p>This section’s endpoints provide a list of the latest Economic Indicators that have undergone changes in their data series, along with the reason for the modification.</p>
+
+        </div>
+
+        <div class="col-12 ">
+            <table id="ajaxTable" class="display" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>Country</th>
+                        <th>Category</th>
+                        <th>Ticker</th>
+                        <th>Reason</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+
+ 
+
+    </div>
+</div>
+@section Scripts {
+
+
+
+
+    <script>
+
+        $(document).ready(function() {
+            $.ajax({
+                url: '/Changes/GetchangesData', // Replace with your controller and action
+                type: 'GET', // or 'POST' depending on your requirement
+                success: function(data) {
+                    // Handle success - update your UI with the received data
+                    console.log(data);
+                                   // Initialize DataTable with the fetched data
+                $('#ajaxTable').DataTable({
+                    data: data, // Use the received data as the source
+                       responsive: true, // Enable the responsive feature
+                    columns: [
+                        { data: 'country' },
+                        { data: 'category' },
+                        { data: 'ticker' },
+                        { data: 'reason' },
+                                        {
+                        data: 'date',
+                         render: function(data) {
+                        const date = new Date(data);
+                            const options = { day: 'numeric', month: 'short', year: 'numeric' };
+                            return date.toLocaleDateString('en-GB', options);
+                        // const options = { year: 'numeric', month: 'long', day: 'numeric' };
+                        // return date.toLocaleDateString('en-US', options);
+                             }
+                           }
+                        // { data: 'date' }
+                    ]
+                });
+                },
+                error: function(xhr, status, error) {
+                    // Handle error
+                    console.error('AJAX Error:', status, error);
+                }
+            });
+        });
+
+
+    </script>
+}

@@ -1,0 +1,263 @@
+﻿<div class="container">
+    <h1 class=" text-center mb-5">Stock Comparison</h1>
+
+    <div class="row">
+        <div class="col-4">
+                             
+
+            <select id="single" class="single">
+
+                @await Html.PartialAsync("_SelectList")
+
+            </select>
+
+        </div>
+        <div class="col-4">
+
+
+            <select id="single1" class="single">
+         
+                @await Html.PartialAsync("_SelectList")
+
+            </select>
+
+
+        </div>
+
+        <div class="col-4">
+
+            <button type="button" class="btn-primary btn w-100" id="Search">Compare</button>
+            <button class="btn btn-primary w-100" id="Searchloader" type="button" disabled style="display:none">
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                Loading...
+            </button>
+        </div>
+    </div>
+
+    <div class="col-12">
+        <h2 id="country1"></h2>
+        <table id="stockTable1" class="display responsive" width="100%">
+            <thead>
+                <tr>
+                    @*     <th>Symbol</th>
+                <th>Ticker</th> *@
+                    <th>Country</th>
+                    <th>Name</th>
+                    <th>Date</th>
+                    <th>State</th>
+                    <th>Last</th>
+                    <th>Close</th>
+                    <th>Daily Change</th>
+                    <th>Daily Percentual Change</th>
+                    <!-- Add more columns as needed -->
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="col-12  mb-5">
+        <h2 id="country2"></h2>
+        <table id="stockTable2" class="display responsive" width="100%">
+            <thead>
+                <tr>
+                    @*          <th>Symbol</th>
+                <th>Ticker</th> *@
+                    <th>Country</th>
+                    <th>Name</th>
+                    <th>Date</th>
+                    <th>State</th>
+                    <th>Last</th>
+                    <th>Close</th>
+                    <th>Daily Change</th>
+                    <th>Daily Percentual Change</th>
+                    <!-- Add more columns as needed -->
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+
+
+
+
+</div>
+
+
+@section Scripts {
+
+    <script>
+        $(document).ready(function() {
+
+
+
+
+
+                new SlimSelect({
+          select: '#single'
+        })
+        new SlimSelect({
+          select: '#single1'
+        })
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
+
+            $(document).on("click", "#Search", function () {
+
+                 $('#Search').hide();
+                $('#Searchloader').show();
+
+                   var selectedCountry1 = $('#single').val();
+                   var selectedCountry2 = $('#single1').val();
+
+
+
+                var getparameters = {
+                    country1: selectedCountry1,
+                     country2: selectedCountry2
+                };
+
+
+
+                       $.ajax({
+              url: 'StockMarket/CompareStocks',
+                type: 'GET',
+                data: getparameters,
+                success: function(response) {
+                    console.log('API Response:', response); // Log the response
+
+                    $('#country1').text(response.country1 + ' Stock Data');
+                    $('#country2').text(response.country2 + ' Stock Data');
+
+        // Initialize or update DataTables
+        initializeDataTable('#stockTable1', response.data1);
+        initializeDataTable('#stockTable2', response.data2);
+                    $('#Search').show();
+                $('#Searchloader').hide();
+                    //    // Clear existing data
+                    //    var table = $('#stockTable1');
+                    // table.clear();
+
+                //     $('#stockTable1').DataTable({
+                //         data: response.data1, // Directly use the list of StockData
+                //          responsive : true,
+                //         columns: [
+                //             // { data: 'symbol' },
+                //             // { data: 'ticker' },
+                //             { data: 'country' },
+                //             { data: 'name' },
+                //             {
+                //                 data: 'date',
+                //               render: function(data, type, row) {
+                // // Convert the date string to Date object
+                //                 const date = new Date(data);
+
+                // // Format the date
+                //               const options = { year: 'numeric', month: 'long', day: 'numeric' };
+                //              return date.toLocaleDateString('en-US', options);
+                //              }
+                //            },
+                //             { data: 'state' },
+                //             { data: 'last' },
+                //             { data: 'close' },
+                //             { data: 'dailyChange' },
+                //             { data: 'dailyPercentualChange' }
+
+                //         ]
+                //     });
+
+                //     $('#stockTable2').DataTable({
+                //         data: response.data2, // Directly use the list of StockData
+                //                responsive : true,
+                //         columns: [
+                //             // { data: 'symbol' },
+                //             // { data: 'ticker' },
+                //             { data: 'country' },
+                //             { data: 'name' },
+                //                         {
+                //                 data: 'date',
+                //               render: function(data, type, row) {
+                // // Convert the date string to Date object
+                //                 const date = new Date(data);
+
+                // // Format the date
+                //               const options = { year: 'numeric', month: 'long', day: 'numeric' };
+                //              return date.toLocaleDateString('en-US', options);
+                //              }
+                //            },
+                //             { data: 'state' },
+                //             { data: 'last' },
+                //             { data: 'close' },
+                //             { data: 'dailyChange' },
+                //             { data: 'dailyPercentualChange' }
+
+                //         ]
+                //     });
+                },
+                error: function(error) {
+                    console.error('Error fetching stock data:', error);
+                }
+            });
+
+
+
+            })
+
+
+                    // Function to initialize or update DataTable
+        function initializeDataTable(tableId, data) {
+            // Check if DataTable already exists
+            if ($.fn.DataTable.isDataTable(tableId)) {
+                $(tableId).DataTable().clear().rows.add(data).draw(); // Clear and add new data
+            } else {
+                $(tableId).DataTable({
+                    data: data, // Directly use the list of StockData
+                    responsive: true,
+                    columns: [
+                        { data: 'country' },
+                        { data: 'name' },
+                        {
+                            data: 'date',
+                            render: function(data) {
+                                const date = new Date(data);
+                                    const options = { day: 'numeric', month: 'short', year: 'numeric' };
+                                    return date.toLocaleDateString('en-GB', options);
+                                // const options = { year: 'numeric', month: 'long', day: 'numeric' };
+                                // return date.toLocaleDateString('en-US', options);
+                            }
+                        },
+                        { data: 'state' },
+                        { data: 'last' },
+                        { data: 'close' },
+                        { data: 'dailyChange' },
+                        { data: 'dailyPercentualChange' }
+                    ]
+                });
+            }
+        }
+
+            // // Call the backend function on page load
+            // $.ajax({
+            //     url: 'StockMarket/CompareStocks',
+            //     type: 'GET',
+            //     data: { country1: 'nigeria', country2: 'russian'  }, // Replace with the desired country
+            //     success: function(data) {
+            //         console.log('Stock data:', data);
+            //         console.log('Stock data wwwwwwwwwwwww:', data.data);
+            //         // Process and display the data as needed
+            //         $('#stockData').text(JSON.stringify(data, null, 2));
+            //     },
+            //     error: function(error) {
+            //         console.error('Error fetching stock data:', error);
+            //     }
+            // });
+
+
+
+        });
+    </script>
+}

@@ -1,0 +1,75 @@
+﻿<!-- Views/Home/Index.cshtml -->
+@{
+    ViewData["Title"] = "Economic Indicators Chart";
+}
+<div class="container">
+    <div class="row  ">
+
+        <div class="col-12 text-center">
+
+
+            <h2>Economic Indicators for a Country</h2>
+        </div>
+
+
+        <form id="countryForm">
+
+            <div class="col-12  d-flex justify-content-center">
+
+
+                <div class="col-12  col-md-4">
+                    <label for="countryName">Enter Country Name:</label>
+                </div>
+
+                <div class="col-12 col-md-4">
+
+                    <select id="single1" class="single">
+
+                        @await Html.PartialAsync("_SelectList")
+
+                    </select>
+                </div>
+
+            </div>
+
+            <div class="col-12 mt-5 d-flex justify-content-center ">
+                @* <button class="btn btn-primary w-50 " type="submit">Submit</button> *@
+                <button type="submit" class="btn-primary btn w-50" id="Search">Search</button>
+                <button class="btn btn-primary w-50" id="Searchloader" type="button" disabled style="display:none">
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    Loading...
+                </button>
+            </div>
+            @* <input type="text" id="countryName" name="countryName" required /> *@
+
+        </form>
+
+        <div class=" mt-5">
+            <canvas id="economicChart" style="width: 100% !important; max-height: 500px !important;"></canvas>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+
+
+
+
+
+                new SlimSelect({
+          select: '#single'
+        })
+        new SlimSelect({
+          select: '#single1'
+        })
+        });
+    </script>
+ 
+
+    <script>
+       
+    </script>
+}

@@ -1,0 +1,58 @@
+﻿@model List<CountryRatingViewModel>
+<div class="container">
+
+
+    <h2>Country Ratings</h2>
+    <table id="countryRatingsTable" class="display responsive nowrap" style="width: 100%;">
+        @* <table id="countryRatingsTable" class="table responsive table-bordered"> *@
+        <thead>
+            <tr>
+                <th>Country</th>
+                <th>TE</th>
+                <th>TE Outlook</th>
+                <th>SP</th>
+                <th>SP Outlook</th>
+                <th>Moody's</th>
+                <th>Moody's Outlook</th>
+                <th>Fitch</th>
+                <th>Fitch Outlook</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var rating in Model)
+            {
+                <tr>
+                    <td>@rating.Country</td>
+                    <td>@rating.TE</td>
+                    <td>@rating.TE_Outlook</td>
+                    <td>@rating.SP</td>
+                    <td>@rating.SP_Outlook</td>
+                    <td>@rating.Moodys</td>
+                    <td>@rating.Moodys_Outlook</td>
+                    <td>@rating.Fitch</td>
+                    <td>@rating.Fitch_Outlook</td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+
+
+</div>
+@section Scripts {
+
+    <script>
+        $(document).ready(function () {
+            $('#countryRatingsTable').DataTable({
+
+       
+          
+                 "responsive": true // Enables responsive behavior
+
+            });
+        });
+    </script>
+
+
+}
